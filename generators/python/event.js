@@ -1,7 +1,7 @@
 /**
  * Visual Blocks Language
  *
- * Copyright 2021 Arthur Zheng.
+ * Copyright 2021 openblock.cc.
  * https://github.com/openblockcc/openblock-blocks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -53,12 +53,24 @@ Blockly.Python['event_whenmicrobitbuttonpressed'] = function(block) {
     Blockly.Python.INDENT + Blockly.Python.INDENT + "on_button_" + key + i + "()";
 
   var code = "def on_button_" + key + i + "():\n";
+
   var nextBlock = block.nextConnection && block.nextConnection.targetBlock();
   if (!nextBlock) {
     code += Blockly.Python.INDENT + "pass\n";
+  } else {
+    var variablesName = [];
+    for (var x in Blockly.Python.variables_) {
+      variablesName.push(Blockly.Python.variables_[x].slice(0, Blockly.Python.variables_[x].indexOf('=') - 1));
+    }
+    if (variablesName.length !== 0) {
+      code += Blockly.Python.INDENT + "global " + variablesName.join(', ') + "\n";
+    }
+
+    code = Blockly.Python.scrub_(block, code);
   }
 
-  return code;
+  Blockly.Python.libraries_["def on_button_" + key + i] = code;
+  return null;
 };
 
 Blockly.Python['event_whenmicrobitpinbeingtouched'] = function(block) {
@@ -82,9 +94,20 @@ Blockly.Python['event_whenmicrobitpinbeingtouched'] = function(block) {
   var nextBlock = block.nextConnection && block.nextConnection.targetBlock();
   if (!nextBlock) {
     code += Blockly.Python.INDENT + "pass\n";
+  } else {
+    var variablesName = [];
+    for (var x in Blockly.Python.variables_) {
+      variablesName.push(Blockly.Python.variables_[x].slice(0, Blockly.Python.variables_[x].indexOf('=') - 1));
+    }
+    if (variablesName.length !== 0) {
+      code += Blockly.Python.INDENT + "global " + variablesName.join(', ') + "\n";
+    }
+
+    code = Blockly.Python.scrub_(block, code);
   }
 
-  return code;
+  Blockly.Python.libraries_["def on_pin" + pin + i] = code;
+  return null;
 };
 
 Blockly.Python['event_whenmicrobitgesture'] = function(block) {
@@ -108,7 +131,18 @@ Blockly.Python['event_whenmicrobitgesture'] = function(block) {
   var nextBlock = block.nextConnection && block.nextConnection.targetBlock();
   if (!nextBlock) {
     code += Blockly.Python.INDENT + "pass\n";
+  } else {
+    var variablesName = [];
+    for (var x in Blockly.Python.variables_) {
+      variablesName.push(Blockly.Python.variables_[x].slice(0, Blockly.Python.variables_[x].indexOf('=') - 1));
+    }
+    if (variablesName.length !== 0) {
+      code += Blockly.Python.INDENT + "global " + variablesName.join(', ') + "\n";
+    }
+
+    code = Blockly.Python.scrub_(block, code);
   }
 
-  return code;
+  Blockly.Python.libraries_["def on_" + sta + i] = code;
+  return null;
 };

@@ -1,8 +1,8 @@
 /**
  * Visual Blocks Language
  *
- * Copyright 2020 Arthur Zheng.
- * https://github.com/zhengyangliu/scratch-blocks
+ * Copyright 2020 openblock.cc.
+ * https://github.com/openblockcc/openblock-blocks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,14 +36,15 @@ Blockly.Arduino['control_repeat'] = function(block) {
   var branch = Blockly.Arduino.statementToCode(block, 'SUBSTACK');
   branch = Blockly.Arduino.addLoopTrap(branch, block.id);
 
-  var code = "for (int i=0; i<" + repeats + "; i++) {\n";
+  var code = "for (int index = 0; index < " + repeats + "; index++) {\n";
   code += branch;
   code += "}\n";
   return code;
 };
 
 Blockly.Arduino['control_forever'] = function(block) {
-  if (Blockly.Arduino.firstLoop && !block.getSurroundParent()) {
+  if (Blockly.Arduino.firstLoop && !block.getSurroundParent()
+    && block.getRootBlock().type === 'event_whenarduinobegin') {
     Blockly.Arduino.firstLoop = false;
 
     var branch = Blockly.Arduino.statementToCode(block, 'SUBSTACK');

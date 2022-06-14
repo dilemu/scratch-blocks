@@ -1,7 +1,7 @@
 /**
  * Visual Blocks Language
  *
- * Copyright 2021 Arthur Zheng.
+ * Copyright 2021 openblock.cc.
  * https://github.com/openblockcc/openblock-blocks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -49,7 +49,9 @@ Blockly.Python['control_forever'] = function(block) {
   var branch = Blockly.Python.statementToCode(block, 'SUBSTACK');
   branch = Blockly.Python.addLoopTrap(branch, block.id);
 
-  Blockly.Python.firstLoop = false;
+  if (block.getRootBlock().type === 'event_whenmicrobitbegin') {
+    Blockly.Python.firstLoop = false;
+  }
 
   var code = "while True:\n";
   code += branch;

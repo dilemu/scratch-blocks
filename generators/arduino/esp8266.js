@@ -1,7 +1,7 @@
 /**
  * Visual Blocks Language
  *
- * Copyright 2021 openblock.cc.
+ * Copyright 2020 openblock.cc.
  * https://github.com/openblockcc/openblock-blocks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,16 +18,20 @@
  */
 'use strict';
 
-goog.provide('Blockly.Arduino.matrix');
+goog.provide('Blockly.Arduino.esp8266');
 
 goog.require('Blockly.Arduino');
 
+Blockly.Arduino['arduino_pin_esp8266AttachInterrupt'] = function(block) {
+  var arg0 = block.getFieldValue('PIN') || '2';
+  var arg1 = block.getFieldValue('MODE') || 'RISING';
 
-Blockly.Arduino['matrix'] = function(block) {
-  // Numeric value.
-  var code = block.getFieldValue('MATRIX');
-  if (isNaN(code)) {
-    code = 0;
-  }
-  return [code, Blockly.Arduino.ORDER_ATOMIC];
+  var branch = Blockly.Arduino.statementToCode(block, 'SUBSTACK');
+  branch = Blockly.Arduino.addLoopTrap(branch, block.id);
+
+  Blockly.Arduino.definitions_['definitions_ISR_' + arg1 + arg0] =
+    'void IRAM_ATTR ISR_' + arg1 + '_' + arg0 + '() {\n' + branch + '}';
+
+  var code = 'attachInterrupt(digitalPinToInterrupt(' + arg0 + '), ISR_' + arg1 + '_' + arg0 + ', ' + arg1 + ');\n';
+  return code;
 };
